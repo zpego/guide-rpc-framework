@@ -7,7 +7,7 @@ import github.javaguide.enums.RpcRequestTransportEnum;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
-import github.javaguide.provider.impl.ZkServiceProviderImpl;
+import github.javaguide.provider.impl.NacosServiceProviderImpl;
 import github.javaguide.proxy.RpcClientProxy;
 import github.javaguide.remoting.transport.RpcRequestTransport;
 import lombok.SneakyThrows;
@@ -32,7 +32,8 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
     private final RpcRequestTransport rpcClient;
 
     public SpringBeanPostProcessor() {
-        this.serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
+//        this.serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
+        this.serviceProvider = SingletonFactory.getInstance(NacosServiceProviderImpl.class);
         this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension(RpcRequestTransportEnum.NETTY.getName());
     }
 

@@ -10,6 +10,12 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>rpc-framework-simple</artifactId>
     <dependencies>
+        <!--nacos-->
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-client</artifactId>
+            <version>2.5.1</version>
+        </dependency>
         <dependency>
             <groupId>github.javaguide</groupId>
             <artifactId>rpc-framework-common</artifactId>

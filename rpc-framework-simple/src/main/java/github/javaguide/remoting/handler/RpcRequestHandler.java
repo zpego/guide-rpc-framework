@@ -3,7 +3,7 @@ package github.javaguide.remoting.handler;
 import github.javaguide.exception.RpcException;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
-import github.javaguide.provider.impl.ZkServiceProviderImpl;
+import github.javaguide.provider.impl.NacosServiceProviderImpl;
 import github.javaguide.remoting.dto.RpcRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,7 +21,7 @@ public class RpcRequestHandler {
     private final ServiceProvider serviceProvider;
 
     public RpcRequestHandler() {
-        serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
+        serviceProvider = SingletonFactory.getInstance(NacosServiceProviderImpl.class);
     }
 
     /**
@@ -45,7 +45,8 @@ public class RpcRequestHandler {
             Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
             result = method.invoke(service, rpcRequest.getParameters());
             log.info("service:[{}] successful invoke method:[{}]", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
-        } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
+        } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException |
+                 IllegalAccessException e) {
             throw new RpcException(e.getMessage(), e);
         }
         return result;
