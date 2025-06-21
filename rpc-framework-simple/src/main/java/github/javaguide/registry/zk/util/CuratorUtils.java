@@ -1,7 +1,7 @@
 package github.javaguide.registry.zk.util;
 
 import github.javaguide.enums.RpcConfigEnum;
-import github.javaguide.utils.PropertiesFileUtil;
+import github.javaguide.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -15,7 +15,6 @@ import org.apache.zookeeper.CreateMode;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -100,8 +99,7 @@ public final class CuratorUtils {
 
     public static CuratorFramework getZkClient() {
         // check if user has set zk address
-        Properties properties = PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
-        String zookeeperAddress = properties != null && properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue()) != null ? properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue()) : DEFAULT_ZOOKEEPER_ADDRESS;
+        String zookeeperAddress = PropertiesUtil.PROPERTIES.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyKey(), DEFAULT_ZOOKEEPER_ADDRESS);
         // if zkClient has been started, return directly
         if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
             return zkClient;
@@ -110,9 +108,7 @@ public final class CuratorUtils {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(BASE_SLEEP_TIME, MAX_RETRIES);
         zkClient = CuratorFrameworkFactory.builder()
                 // the server to connect to (can be a server list)
-                .connectString(zookeeperAddress)
-                .retryPolicy(retryPolicy)
-                .build();
+                .connectString(zookeeperAddress).retryPolicy(retryPolicy).build();
         zkClient.start();
         try {
             // wait 30s until connect to the zookeeper
@@ -120,7 +116,7 @@ public final class CuratorUtils {
                 throw new RuntimeException("Time out waiting to connect to ZK!");
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("thread Interrupted error ", e);
         }
         return zkClient;
     }
@@ -140,6 +136,7 @@ public final class CuratorUtils {
         pathChildrenCache.getListenable().addListener(pathChildrenCacheListener);
         pathChildrenCache.start();
     }
+
     /**
      * 创建临时结点
      * */
@@ -155,6 +152,7 @@ public final class CuratorUtils {
             log.error("创建临时结点失败!", e);
         }
     }
+
     public static void deleteEphemeralNode(CuratorFramework zkClient, String path) {
         // 方法2：强制删除节点（无论是否有子节点）
         try {

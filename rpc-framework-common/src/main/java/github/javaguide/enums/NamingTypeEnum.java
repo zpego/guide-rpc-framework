@@ -5,11 +5,11 @@ import lombok.Getter;
 
 /**
  * @Author xiaobiaoxu
- * @Date 2023年02月24日 15:30
+ * @Date 2023年02月24日 15:33
  */
 @AllArgsConstructor
 @Getter
-public enum ServiceRegistryEnum {
+public enum NamingTypeEnum {
 
     ZK("zk"),
     NACOS("nacos");

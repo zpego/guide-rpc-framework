@@ -4,7 +4,7 @@ import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
 import github.javaguide.enums.RpcConfigEnum;
-import github.javaguide.utils.PropertiesFileUtil;
+import github.javaguide.utils.PropertiesUtil;
 
 import java.util.Objects;
 import java.util.Properties;
@@ -26,22 +26,19 @@ public class NacosUtils {
         if (!Objects.isNull(namingService)) {
             return namingService;
         }
-        Properties properties = PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
-
         try {
             Properties nacosProperties = new Properties();
-            if (!Objects.isNull(properties)) {
-                String nacosAddress = properties.getOrDefault(RpcConfigEnum.NACOS_ADDRESS.getPropertyValue(), DEFAULT_NACOS_ADDRESS).toString();
-                nacosProperties.put("serverAddr", nacosAddress);
 
-                String nacosUsername = properties.getOrDefault(RpcConfigEnum.NACOS_USERNAME.getPropertyValue(), DEFAULT_NACOS_USERNAME).toString();
-                nacosProperties.put("username", nacosUsername);
+            String nacosAddress = PropertiesUtil.PROPERTIES.getOrDefault(RpcConfigEnum.NACOS_ADDRESS.getPropertyKey(), DEFAULT_NACOS_ADDRESS).toString();
+            nacosProperties.put("serverAddr", nacosAddress);
 
-                String nacosPassword = properties.getOrDefault(RpcConfigEnum.NACOS_PASSWORD.getPropertyValue(), DEFAULT_NACOS_PASSWORD).toString();
-                nacosProperties.put("password", nacosPassword);
+            String nacosUsername = PropertiesUtil.PROPERTIES.getOrDefault(RpcConfigEnum.NACOS_USERNAME.getPropertyKey(), DEFAULT_NACOS_USERNAME).toString();
+            nacosProperties.put("username", nacosUsername);
 
-                namingService = NacosFactory.createNamingService(nacosProperties);
-            }
+            String nacosPassword = PropertiesUtil.PROPERTIES.getOrDefault(RpcConfigEnum.NACOS_PASSWORD.getPropertyKey(), DEFAULT_NACOS_PASSWORD).toString();
+            nacosProperties.put("password", nacosPassword);
+
+            namingService = NacosFactory.createNamingService(nacosProperties);
         } catch (NacosException e) {
             throw new RuntimeException(e);
         }

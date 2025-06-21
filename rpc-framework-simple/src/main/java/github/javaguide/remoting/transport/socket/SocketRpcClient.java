@@ -1,6 +1,6 @@
 package github.javaguide.remoting.transport.socket;
 
-import github.javaguide.enums.ServiceDiscoveryEnum;
+import github.javaguide.enums.NamingTypeEnum;
 import github.javaguide.exception.RpcException;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.registry.ServiceDiscovery;
@@ -27,7 +27,7 @@ public class SocketRpcClient implements RpcRequestTransport {
     private final ServiceDiscovery serviceDiscovery;
 
     public SocketRpcClient() {
-        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension(ServiceDiscoveryEnum.ZK.getName());
+        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension(NamingTypeEnum.ZK.getName());
     }
 
     @Override

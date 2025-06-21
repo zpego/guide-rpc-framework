@@ -1,8 +1,8 @@
 package github.javaguide.provider.impl;
 
 import github.javaguide.config.RpcServiceConfig;
+import github.javaguide.enums.NamingTypeEnum;
 import github.javaguide.enums.RpcErrorMessageEnum;
-import github.javaguide.enums.ServiceRegistryEnum;
 import github.javaguide.exception.RpcException;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.provider.ServiceProvider;
@@ -35,7 +35,7 @@ public class ZkServiceProviderImpl implements ServiceProvider {
     public ZkServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
         registeredService = ConcurrentHashMap.newKeySet();
-        serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension(ServiceRegistryEnum.ZK.getName());
+        serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension(NamingTypeEnum.ZK.getName());
     }
 
     @Override

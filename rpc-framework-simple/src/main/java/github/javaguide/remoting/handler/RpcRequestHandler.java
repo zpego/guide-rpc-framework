@@ -1,10 +1,10 @@
 package github.javaguide.remoting.handler;
 
 import github.javaguide.exception.RpcException;
-import github.javaguide.factory.SingletonFactory;
+import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.provider.ServiceProvider;
-import github.javaguide.provider.impl.NacosServiceProviderImpl;
 import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -21,7 +21,7 @@ public class RpcRequestHandler {
     private final ServiceProvider serviceProvider;
 
     public RpcRequestHandler() {
-        serviceProvider = SingletonFactory.getInstance(NacosServiceProviderImpl.class);
+        this.serviceProvider = ExtensionLoader.getExtensionLoader(ServiceProvider.class).getExtension(PropertiesUtil.getReistryType());
     }
 
     /**
