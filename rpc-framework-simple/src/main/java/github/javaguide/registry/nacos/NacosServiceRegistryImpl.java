@@ -2,11 +2,13 @@ package github.javaguide.registry.nacos;
 
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
+import github.javaguide.provider.ServiceProvider;
 import github.javaguide.registry.ServiceRegistry;
 import github.javaguide.registry.nacos.util.NacosUtils;
+import github.javaguide.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.net.InetSocketAddress;
+import java.util.Map;
 
 
 /**
@@ -18,12 +20,27 @@ import java.net.InetSocketAddress;
 public class NacosServiceRegistryImpl implements ServiceRegistry {
 
     @Override
-    public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) {
+    public void registerService(String rpcServiceName) {
         try {
             NamingService namingService = NacosUtils.getNamingService();
-            namingService.registerInstance(rpcServiceName,inetSocketAddress.getHostString(),inetSocketAddress.getPort());
+            namingService.registerInstance(rpcServiceName, PropertiesUtil.getIp(), PropertiesUtil.getPort());
         } catch (NacosException e) {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void deleteService() {
+        Map<String, Object> serviceMap = ServiceProvider.SERVICE_MAP;
+        try {
+            NamingService namingService = NacosUtils.getNamingService();
+            for (String serviceName : serviceMap.keySet()) {
+                log.info("delete service: {}", serviceName);
+                namingService.deregisterInstance(serviceName, PropertiesUtil.getIp(), PropertiesUtil.getPort());
+            }
+        } catch (NacosException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

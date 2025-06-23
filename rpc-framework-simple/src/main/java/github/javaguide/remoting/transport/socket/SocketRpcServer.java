@@ -5,17 +5,15 @@ import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.impl.ZkServiceProviderImpl;
+import github.javaguide.utils.PropertiesUtil;
 import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-
-import static github.javaguide.remoting.transport.netty.server.NettyRpcServer.PORT;
 
 /**
  * @author shuang.kou
@@ -39,8 +37,7 @@ public class SocketRpcServer {
 
     public void start() {
         try (ServerSocket server = new ServerSocket()) {
-            String host = InetAddress.getLocalHost().getHostAddress();
-            server.bind(new InetSocketAddress(host, PORT));
+            server.bind(new InetSocketAddress(PropertiesUtil.getIp(), PropertiesUtil.getPort()));
             CustomShutdownHook.getCustomShutdownHook().clearAll();
             Socket socket;
             while ((socket = server.accept()) != null) {

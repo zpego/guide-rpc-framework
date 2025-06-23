@@ -22,7 +22,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.net.InetAddress;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,8 +34,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class NettyRpcServer {
-
-    public static final int PORT = 9998;
 
     private final ServiceProvider serviceProvider;
 
@@ -51,7 +48,6 @@ public class NettyRpcServer {
     @SneakyThrows
     public void start() {
         CustomShutdownHook.getCustomShutdownHook().clearAll();
-        String host = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
@@ -83,7 +79,7 @@ public class NettyRpcServer {
                     });
 
             // 绑定端口，同步等待绑定成功
-            ChannelFuture f = b.bind(host, PORT).sync();
+            ChannelFuture f = b.bind(PropertiesUtil.getIp(), PropertiesUtil.getPort()).sync();
             // 等待服务端监听端口关闭
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {

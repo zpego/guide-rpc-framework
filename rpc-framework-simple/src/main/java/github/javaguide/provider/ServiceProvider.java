@@ -3,6 +3,9 @@ package github.javaguide.provider;
 import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.extension.SPI;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * store and provide service object.
  *
@@ -11,6 +14,8 @@ import github.javaguide.extension.SPI;
  */
 @SPI
 public interface ServiceProvider {
+
+    Map<String, Object> SERVICE_MAP = new ConcurrentHashMap<>();
 
     /**
      * @param rpcServiceConfig rpc service related attributes
